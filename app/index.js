@@ -5,27 +5,23 @@ import {range, flatten, shuffle} from 'lodash'
 var App = React.createClass({
   getInitialState: function() {
     return {
-      cards: flatten(range(10).map((numPair, index) => range(2).map((number) =>
-        ({value: index+ 1, found: false})))),
+      cards: flatten(range(10).map((numPair) => range(2).map(() =>
+        ({value: numPair + 1, found: false})))),
       firstClicked: null,
       secondClicked: null,
-      cardCount: 0
     }
   },
   flipCard: function(card, index) {
-    var {cards, firstClicked, secondClicked, cardCount} = this.state
-    cardCount += 1
-    if(firstClicked == null || cardCount % 2 !== 0) {
+    var {cards, firstClicked, secondClicked} = this.state
+    if(firstClicked == null) {
       this.setState({
       firstClicked: index,
-      cardCount: cardCount
       })
     } else {
       this.setState({
         secondClicked: index,
-        cardCount: cardCount
       })
-      if(cardCount % 2 === 0) {
+      if(firstClicked !== null) {
         if(cards[firstClicked].value === cards[index].value) {
           cards[firstClicked].found = true
           cards[index].found = true
@@ -63,8 +59,7 @@ var App = React.createClass({
       cards: flatten(range(10).map((numPair, index) => range(2).map((number) =>
         ({value: index+ 1, found: false})))),
       firstClicked: null,
-      secondClicked: null,
-      cardCount: 0
+      secondClicked: null
       })
   },
   render: function() {
@@ -79,7 +74,7 @@ var App = React.createClass({
               ))}
           </tbody>
         </table>
-        {this.state.cardCount > 0
+        {this.state.firstClick !== null
           ? <div><p>Game in Progress</p><button className="btn-primary" onClick={this.giveUp}>Give Up</button><button className="btn-danger" onClick={this.reset}>Reset</button></div>
           : <button className="btn-success" onClick={this.shuffleCards}>Shuffle</button>}
       </div>
